@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "yarr.fullname" . }}
+  labels: {{- include "yarr.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  selector: {{- include "yarr.selectorLabels" . | nindent 4 }}
+  ports:
+    - name: oauth2-proxy
+      protocol: TCP
+      port: {{ .Values.oauth2Proxy.service.port }}
+      targetPort: 4180
+    - name: yarr
+      protocol: TCP
+      port: {{ .Values.yarr.service.port }}
+      targetPort: 7070
