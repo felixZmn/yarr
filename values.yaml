@@ -1,7 +1,7 @@
 oauth2Proxy:
   image:
     repository: quay.io/oauth2-proxy/oauth2-proxy
-    tag: v7.8.1-alpine
+    tag: v7.8.2-alpine
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -18,8 +18,8 @@ oauth2Proxy:
 
 yarr:
   image:
-    repository: arsfeld/yarr
-    tag: v2.4
+    repository: ghcr.io/nkanaev/yarr
+    tag: v2.5
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
