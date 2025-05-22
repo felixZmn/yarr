@@ -1,4 +1,4 @@
-# helm-yarr
+# yarr
 
 A Helm Chart for [yarr (Yet Another RSS Reader)](https://github.com/nkanaev/yarr) - a simple RSS reader.
 
