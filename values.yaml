@@ -13,6 +13,7 @@ oauth2Proxy:
     requests:
       cpu: 50m
       memory: 64Mi
+  command: ["/bin/oauth2-proxy"]
   args:
     - --some-args-for-oauth2-proxy-here
 
@@ -32,13 +33,18 @@ yarr:
       cpu: 250m
       memory: 128Mi
 
-# This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+extraSecrets: []
+  # - name: "test"
+  #   secretName: "test"
+  #   defaultMode: 420
+  #   mountPath: /etc/secrets/name
+  #   readOnly: true
+
 imagePullSecrets: []
-# This is to override the chart name.
+
 nameOverride: ""
 fullnameOverride: ""
 
-# This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
   enabled: true
   className: nginx

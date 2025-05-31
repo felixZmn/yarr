@@ -27,8 +27,17 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          command: {{ .Values.oauth2Proxy.command }}
           args:
             {{- toYaml .Values.oauth2Proxy.args | nindent 12 }}
+          volumeMounts:
+            {{- with .Values.extraSecrets }}
+            {{- range . }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+              readOnly: {{ .readOnly | default true }}
+            {{- end }}
+            {{- end }}
 
         - name: yarr
           image: {{ .Values.yarr.image.repository }}:{{ .Values.yarr.image.tag }}
@@ -47,7 +56,22 @@ spec:
           volumeMounts:
             - name: {{ include "yarr.fullname" . }}-data
               mountPath: /data
+            {{- with .Values.extraSecrets }}
+            {{- range . }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+              readOnly: {{ .readOnly | default true }}
+            {{- end }}
+            {{- end }}
       volumes:
         - name: yarr-data
           persistentVolumeClaim:
             claimName: yarr-data
+        {{- with .Values.extraSecrets }}
+        {{- range . }}
+        - name: {{ .name }}
+          secret:
+            secretName: {{ .secretName }}
+          defaultMode: {{ .defaultMode | default 420 }}
+        {{- end }}
+        {{- end }}

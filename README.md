@@ -6,8 +6,5 @@ A Helm Chart for [yarr (Yet Another RSS Reader)](https://github.com/nkanaev/yarr
 
 ```bash
 helm package .
-helm registry login ghcr.io -u felixZmn
-
-export CHART_VERSION=$(grep -m 1 'version:' ./Chart.yaml | tail -n1 | awk '{ print $2 }')
-helm push yarr-${CHART_VERSION}.tgz oci://ghcr.io/felixzmn/helm
+helm push yarr-*.tgz oci://ghcr.io/felixzmn/helm
 ```
