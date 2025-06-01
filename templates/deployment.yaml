@@ -72,6 +72,5 @@ spec:
         - name: {{ .name }}
           secret:
             secretName: {{ .secretName }}
-          defaultMode: {{ .defaultMode | default 420 }}
         {{- end }}
         {{- end }}

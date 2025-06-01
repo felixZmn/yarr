@@ -36,7 +36,6 @@ yarr:
 extraSecrets: []
   # - name: "test"
   #   secretName: "test"
-  #   defaultMode: 420
   #   mountPath: /etc/secrets/name
   #   readOnly: true
 
