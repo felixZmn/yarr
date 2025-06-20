@@ -1,3 +1,7 @@
+{{- $defaultSecurityContext := .Values.defaults.securityContext }}
+{{- $oauth2SecurityContext := mergeOverwrite (deepCopy $defaultSecurityContext) .Values.oauth2Proxy.securityContext }}
+{{- $yarrSecurityContext := mergeOverwrite (deepCopy $defaultSecurityContext) .Values.yarr.securityContext }}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -13,6 +17,7 @@ spec:
       labels:
         {{- include "yarr.labels" . | nindent 8 }}
     spec:
+      automountServiceAccountToken: false
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -21,8 +26,14 @@ spec:
         - name: oauth2-proxy
           image: {{ .Values.oauth2Proxy.image.repository }}:{{ .Values.oauth2Proxy.image.tag }}
           imagePullPolicy: {{ .Values.oauth2Proxy.image.pullPolicy }}
+          {{- with $oauth2SecurityContext }}
+          securityContext:
+            {{- toYaml $oauth2SecurityContext | nindent 12 }}
+          {{- end }}
+          {{- with .Values.oauth2Proxy.service }}
           ports:
-          - containerPort: {{ .Values.oauth2Proxy.service.port }}
+          - containerPort: {{ .port }}
+          {{- end }}
           {{- with .Values.oauth2Proxy.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
@@ -42,6 +53,10 @@ spec:
         - name: yarr
           image: {{ .Values.yarr.image.repository }}:{{ .Values.yarr.image.tag }}
           imagePullPolicy: {{ .Values.yarr.image.pullPolicy }}
+          {{- with $yarrSecurityContext }}
+          securityContext:
+            {{- toYaml $yarrSecurityContext | nindent 12 }}
+          {{- end }}
           ports:
           - containerPort: {{ .Values.yarr.service.port }}
           {{- with .Values.yarr.resources }}
@@ -64,9 +79,9 @@ spec:
             {{- end }}
             {{- end }}
       volumes:
-        - name: yarr-data
+        - name: {{ include "yarr.fullname" . }}-data
           persistentVolumeClaim:
-            claimName: yarr-data
+            claimName: {{ include "yarr.fullname" . }}-data
         {{- with .Values.extraSecrets }}
         {{- range . }}
         - name: {{ .name }}

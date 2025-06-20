@@ -1,8 +1,22 @@
+defaults:
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    runAsGroup: 1000
+    runAsUser: 1000
+    readOnlyRootFilesystem: true
+
+networkPolicy:
+  enabled: true
+
 oauth2Proxy:
   image:
     repository: quay.io/oauth2-proxy/oauth2-proxy
     tag: v7.9.0-alpine
     pullPolicy: IfNotPresent
+  securityContext: {}
   service:
     type: ClusterIP
     port: 4180
@@ -22,6 +36,7 @@ yarr:
     repository: ghcr.io/nkanaev/yarr
     tag: v2.5
     pullPolicy: IfNotPresent
+  securityContext: {}
   service:
     type: ClusterIP
     port: 7070
