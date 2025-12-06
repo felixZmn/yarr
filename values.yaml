@@ -63,7 +63,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 ingress:
-  enabled: true
+  enabled: false
   className: nginx
   annotations:
     kubernetes.io/ingress.class: "nginx"
@@ -81,3 +81,18 @@ ingress:
     - secretName: yarr-tls
       hosts:
         - yarr.example.com
+
+httpRoute:
+  enabled: false
+  annotations: {}
+  parentRefs:
+  - name: gateway
+    sectionName: http
+    # namespace: default
+  hostnames:
+  - yarr.example.com
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
